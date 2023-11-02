@@ -1,5 +1,9 @@
 import { Menu } from "./Menu"
 
 export default function Page() {
-  return <Menu />
+  return (
+    <div className="p-4">
+      <Menu />
+    </div>
+  )
 }
