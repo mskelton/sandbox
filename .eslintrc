@@ -1,3 +1,7 @@
 {
-  "extends": ["@mskelton", "@mskelton/eslint-config/react"]
+  "extends": [
+    "@mskelton",
+    "@mskelton/eslint-config/react",
+    "plugin:@next/next/recommended"
+  ]
 }
