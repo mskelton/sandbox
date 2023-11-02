@@ -1,13 +1,15 @@
 "use client"
 import "./Menu.css"
+import { useState } from "react"
 
 export function Menu() {
+  const [active, setActive] = useState(false)
+
   return (
     <button
       className="menu"
-      onClick={(e) => {
-        e.currentTarget.toggleAttribute("aria-pressed")
-      }}
+      data-pressed={active || undefined}
+      onClick={() => setActive(!active)}
       type="button"
     >
       <svg viewBox="0 0 100 100">

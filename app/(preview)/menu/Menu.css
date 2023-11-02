@@ -1,14 +1,7 @@
-body {
-  font-family: sans-serif;
-}
-
 .menu {
-  appearance: none;
   padding: 4px;
-  border: none;
   background: #eee;
   border-radius: 100%;
-  cursor: pointer;
 }
 
 .menu svg {
