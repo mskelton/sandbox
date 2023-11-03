@@ -1,3 +1,5 @@
+"use client"
+
 import {
   ArrowPathIcon,
   BookOpenIcon,
@@ -15,7 +17,7 @@ import {
   WalletIcon,
 } from "@heroicons/react/24/solid"
 import clsx from "clsx"
-import { cloneElement } from "react"
+import { cloneElement, useLayoutEffect, useRef, useState } from "react"
 
 function Section({
   children,
@@ -40,7 +42,7 @@ function Section({
         )}
 
         <div
-          className="grid gap-3"
+          className="grid gap-3 gap-x-32"
           style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
         >
           {children}
@@ -60,7 +62,7 @@ function Item({
   return (
     <div
       className={clsx(
-        "flex items-center text-sm text-slate-700",
+        "flex items-center whitespace-nowrap text-sm text-slate-700",
         icon && "font-medium",
       )}
     >
@@ -113,7 +115,7 @@ function Menu2() {
           </p>
         </div>
 
-        <div className="flex gap-3 px-6">
+        <div className="flex gap-3 gap-x-32 px-6">
           <Section className="flex-1" cols={1} title="Get Started">
             <Item>Prebuilt checkout</Item>
             <Item>Libraries and SDKs</Item>
@@ -141,11 +143,69 @@ function Menu2() {
 }
 
 export function StripeNav() {
+  const refs = useRef<HTMLDivElement[]>([])
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [styles, setStyles] = useState<React.CSSProperties>({})
+
+  const setRef = (index: number) => (el: HTMLDivElement) => {
+    refs.current[index] = el
+  }
+
+  useLayoutEffect(() => {
+    const ref = refs.current[activeIndex]
+    if (!ref) return
+
+    setStyles({
+      height: ref.offsetHeight,
+      transform: `translateX(${150 * activeIndex}px)`,
+      width: ref.offsetWidth,
+    })
+  }, [activeIndex])
+
   return (
     <div className="h-screen w-screen bg-slate-50 p-4">
-      <div className="rounded-lg bg-white shadow-md">
-        <Menu1 />
-        <Menu2 />
+      <ul className="flex gap-8">
+        <li className="cursor-pointer" onMouseOver={() => setActiveIndex(0)}>
+          Solutions
+        </li>
+        <li className="cursor-pointer" onMouseOver={() => setActiveIndex(1)}>
+          Developers
+        </li>
+      </ul>
+
+      <div
+        className="relative flex rounded-lg shadow-md transition-[height,width,transform] duration-[400ms]"
+        style={styles}
+      >
+        <div
+          ref={setRef(0)}
+          aria-hidden={activeIndex !== 0}
+          className={clsx(
+            "absolute transition-all duration-[400ms] aria-hidden:opacity-0",
+            activeIndex > 0
+              ? "translate-x-16"
+              : activeIndex < 0
+              ? "-translate-x-16"
+              : "",
+          )}
+        >
+          <Menu1 />
+        </div>
+
+        <div
+          ref={setRef(1)}
+          aria-hidden={activeIndex !== 1}
+          className={clsx(
+            "absolute transition-all duration-[400ms] aria-hidden:opacity-0",
+            activeIndex > 1
+              ? "translate-x-16"
+              : activeIndex < 1
+              ? "-translate-x-16"
+              : "",
+          )}
+        >
+          <Menu2 />
+        </div>
       </div>
     </div>
   )
